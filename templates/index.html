@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebSocket Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <input id="message_input" autocomplete="off" /><button
+      onclick="sendMessage()"
+    >
+      Send
+    </button>
+
+    <script>
+      var socket = io.connect(
+        "http://" + document.domain + ":" + location.port
+      );
+
+      socket.on("message", function (msg) {
+        var ul = document.getElementById("messages");
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(msg));
+        ul.appendChild(li);
+      });
+
+      function sendMessage() {
+        var input = document.getElementById("message_input");
+        var message = input.value;
+        input.value = "";
+        socket.emit("message", message);
+      }
+    </script>
+  </body>
+</html>
